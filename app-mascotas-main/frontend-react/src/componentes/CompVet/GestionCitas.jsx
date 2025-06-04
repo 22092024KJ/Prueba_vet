@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Table, Card, Badge, Form, Row, Col } from 'react-bootstrap';
 import { Plus, Check, X, Trash2, Clock } from 'react-feather';
-import '../../stylos/cssVet/AgendaVet.css';
+import '../../stylos/cssVet/GestionCitas.css';
 
-const AgendaVet = () => {
+const GestionCitas = () => {
   const [citas, setCitas] = useState([
     {
       id: "1",
@@ -260,4 +260,4 @@ const AgendaVet = () => {
   );
 };
 
-export default AgendaVet;
+export default GestionCitas;
