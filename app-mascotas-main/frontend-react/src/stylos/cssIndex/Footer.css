@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Spicy+Rice&display=swap');
+
+:root {
+  --color1: #000000;
+  --color2: #1a2540;
+  --color3: #495a90;
+  --color4: #8196eb;
+  --color5: #c2d8ff;
+  --transition: all 0.3s ease;
+  --shadow-sm: 0 4px 15px rgba(26, 37, 64, 0.1);
+  --shadow-md: 0 8px 20px rgba(26, 37, 64, 0.15);
+  --border-radius: 10px;
+}
+
+.footer-prin {
+  position: relative;
+  margin-top: 50px;
+  width: 100%;
+  overflow: hidden; /* Evita desbordamiento */
+}
+
+.footer-container {
+  width: 100%;
+  background-color: white;
+  color: var(--color2);
+  padding: 2rem 0; /* Eliminado padding lateral */
+  display: flex;
+  gap: 2rem;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  margin: 0; /* Eliminado margen */
+  max-width: 100%; /* Asegura ancho máximo */
+  overflow-x: hidden; /* Evita scroll horizontal */
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem 0; /* Eliminado padding lateral */
+  }
+}
+
+.footer-container > div {
+  flex: 1;
+  padding: 1rem;
+  transition: var(--transition);
+  border-radius: var(--border-radius);
+}
+
+.footer-container > div:hover {
+  transform: translateY(-5px);
+  background-color: rgba(194, 216, 255, 0.3);
+  box-shadow: var(--shadow-sm);
+}
+
+.footer-container h3 {
+  color: var(--color3);
+  border-bottom: 2px solid var(--color5);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 1.3rem;
+}
+
+.footer-container p {
+  color: var(--color2);
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.footer-slogan {
+  font-size: 1.2rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 1.5rem !important;
+  color: var(--color3) !important;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.social-icons a {
+  color: var(--color2);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0.65rem;
+  background-color: var(--color5);
+  width: 42px;
+  height: 42px;
+  box-shadow: var(--shadow-sm);
+}
+
+.social-icons a:hover {
+  background-color: var(--color3);
+  transform: translateY(-3px);
+  color: white;
+}
+
+.footer-container a {
+  color: var(--color3);
+  text-decoration: none;
+  transition: var(--transition);
+  font-weight: 500;
+  position: relative;
+}
+
+.footer-container a:hover {
+  color: var(--color4);
+}
+
+.footer-container a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background-color: var(--color4);
+  transition: width 0.3s ease;
+}
+
+.footer-container a:hover::after {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .footer-container > div {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .footer-container > div {
+    width: 100%;
+  }
+  
+  .social-icons {
+    justify-content: center;
+  }
+}
+
+.footer-image {
+  position: absolute;
+  right: 50px;
+  bottom: 0;
+  z-index: 1;
+}
+
+.footer-img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.footer-container {
+  animation: fade-in 0.5s var(--transition) both;
+}
+
+/* Corrección para eliminar espacios laterales */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Asegura que el footer ocupe todo el ancho */
+#moybe-footer {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  box-sizing: border-box;
+  position: relative;
+  left: 0;
+  right: 0;
+  background-color: white;
+}
