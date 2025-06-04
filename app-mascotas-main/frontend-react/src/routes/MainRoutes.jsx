@@ -41,7 +41,6 @@ const Mascota = React.lazy(() => import("../componentes/CompPropietario/Mascota"
 // Componentes veterinario
 const PanelVet = React.lazy(() => import("../componentes/CompVet/PanelVet"))
 const InicioVet = React.lazy(() => import("../componentes/CompVet/InicioVet"));
-const AgendaVet = React.lazy(() => import("../componentes/CompVet/AgendaVet"));
 const HisVet = React.lazy(() => import("../componentes/CompAdmin/HisCli"));
 const Consultas = React.lazy(() => import("../componentes/CompVet/Consultas"));
 const NuevaConsulta = React.lazy(() => import("../componentes/CompVet/NuevaConsulta"));
@@ -133,14 +132,12 @@ const MainRoutes = () => {
       {/*<Route element={isDevelopment ? <RutasVet /> : <RutaProtegida rolPermitido="veterinario"><RutasVet /></RutaProtegida>}>*/}
         <Route element={<RutasPublicas/>} />
         <Route path="/PanelVet" element={<PanelVet />}>
-          <Route index element={<InicioVet />} />
+          <Route path="InicioVet" element={<InicioVet />} />
           <Route path="nueva-consulta" element={<NuevaConsulta />} />
-          <Route path="agenda" element={<AgendaVet />} />
           <Route path="consultas" element={<Consultas />} />
           <Route path="historial-clinico" element={<HisVet />} />
           <Route path="mascotas" element={<Mascotas />} />
         </Route>
-  
 
       {/* Página 404 - Not Found */}
       <Route path="*" element={<NotFound />} />
