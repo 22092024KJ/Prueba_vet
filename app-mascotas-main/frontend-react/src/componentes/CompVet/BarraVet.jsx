@@ -10,8 +10,11 @@ const BarraVet = ({ onToggleMenu, menuAbierto }) => {
   const menuItems = [
     { icon: Activity, text: "Inicio", path: "/PanelVet/InicioVet" },
     { icon: PawPrint, text: "Mascotas", path: "/PanelVet/mascotas" },
+
     {icon: Calendar, text: "Citas", path: "/PanelVet/citas" },
-    { icon: FileText, text: "Historial Clínico", path: "/PanelVet/historiales" }
+    { icon: FileText, text: "Historial Clínico", path: "/PanelVet/historiales" },
+    {icon: Calendar, text: "Citas", path: "/PanelVet/gestion-citas" },
+    { icon: FileText, text: "Historial Medico", path: "/PanelVet/historiales" }
   ]
 
   useEffect(() => {

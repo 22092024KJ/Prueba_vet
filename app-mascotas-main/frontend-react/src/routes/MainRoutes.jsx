@@ -45,6 +45,7 @@ const HisVet = React.lazy(() => import("../componentes/CompAdmin/HisCli"));
 const Consultas = React.lazy(() => import("../componentes/CompVet/Consultas"));
 const NuevaConsulta = React.lazy(() => import("../componentes/CompVet/NuevaConsulta"));
 const Mascotas = React.lazy(() => import("../componentes/CompVet/Mascotas"));
+const GestionCitas = React.lazy(() => import("../componentes/CompVet/GestionCitas"));
 
 const MainRoutes = () => {
   // ✅ USAR EL HOOK PARA CERRAR SESIÓN AL RETROCEDER
@@ -137,6 +138,7 @@ const MainRoutes = () => {
           <Route path="consultas" element={<Consultas />} />
           <Route path="historial-clinico" element={<HisVet />} />
           <Route path="mascotas" element={<Mascotas />} />
+          <Route path="gestion-citas" element={<GestionCitas />} />
         </Route>
 
       {/* Página 404 - Not Found */}
