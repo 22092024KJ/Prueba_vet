@@ -19,15 +19,6 @@ const EncabezadoVet = ({ onToggleMenu, isSidebarOpen, userData }) => {
             <Menu size={20} />
             <span>MENU</span>
           </button>
-          
-          <div className="search-container">
-            <Search size={18} className="search-icon" />
-            <input 
-              type="text" 
-              placeholder="Buscar paciente..." 
-              className="search-input" 
-            />
-          </div>
         </div>
 
         <div className="header-right">
