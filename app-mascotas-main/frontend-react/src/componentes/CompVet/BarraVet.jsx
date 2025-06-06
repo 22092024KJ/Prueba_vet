@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Activity, Calendar, FileText, PawPrint, Pill, Stethoscope, User, X } from 'lucide-react'
+import { Calendar, FileText, PawPrint, Pill, Stethoscope, User, X } from 'lucide-react'
 import { Link, useLocation } from "react-router-dom"
 import "../../stylos/cssVet/BarraVet.css";
 
