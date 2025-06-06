@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Activity, Calendar, FileText, PawPrint, Pill, User, X } from 'lucide-react'
+import { Activity, Calendar, FileText, PawPrint, Pill, Stethoscope, User, X } from 'lucide-react'
 import { Link, useLocation } from "react-router-dom"
 import "../../stylos/cssVet/BarraVet.css"
 
@@ -8,13 +8,10 @@ const BarraVet = ({ onToggleMenu, menuAbierto }) => {
   const location = useLocation()
 
   const menuItems = [
-    { icon: Activity, text: "Inicio", path: "/PanelVet/InicioVet" },
+    { icon: Stethoscope, text: "Inicio", path: "/PanelVet/InicioVet" },
     { icon: PawPrint, text: "Mascotas", path: "/PanelVet/mascotas" },
-
-    {icon: Calendar, text: "Citas", path: "/PanelVet/citas" },
-    { icon: FileText, text: "Historial Clínico", path: "/PanelVet/historiales" },
     {icon: Calendar, text: "Citas", path: "/PanelVet/gestion-citas" },
-    { icon: FileText, text: "Historial Medico", path: "/PanelVet/historiales" }
+    { icon: FileText, text: "Historial Clínico", path: "/PanelVet/historiales" }
   ]
 
   useEffect(() => {

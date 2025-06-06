@@ -1,12 +1,11 @@
-// InicioVet.jsx
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, FileText, PawPrint, Plus, Activity, Pill, ChevronRight, Search } from 'lucide-react';
+import { Calendar, Clock, FileText, PawPrint, ChevronRight, Search } from 'lucide-react';
 import { Link } from "react-router-dom";
 import "../../stylos/cssVet/InicioVet.css";
 import "../../stylos/cssVet/Card.css";
 
 export default function InicioVet() {
-  // Estado para las citas
+  // Estados principales
   const [citas, setCitas] = useState([
     {
       id: 1,
@@ -50,8 +49,7 @@ export default function InicioVet() {
     }
   ]);
 
-  // Estado para pacientes recientes
-  const [pacientes, setPacientes] = useState([
+  const [mascotas, setMascotas] = useState([
     {
       id: 1,
       nombre: 'Max',
@@ -82,25 +80,56 @@ export default function InicioVet() {
     }
   ]);
 
-  // Estado para búsqueda
+  // Estados para UI
   const [busqueda, setBusqueda] = useState('');
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalAtencionAbierto, setModalAtencionAbierto] = useState(false);
   const [citaSeleccionada, setCitaSeleccionada] = useState(null);
+  const [citaActual, setCitaActual] = useState(null);
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Filtrar pacientes según búsqueda
-  const pacientesFiltrados = pacientes.filter(paciente =>
-    paciente.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-    paciente.raza.toLowerCase().includes(busqueda.toLowerCase())
+  // Funciones auxiliares
+  const mostrarNotificacion = (mensaje, tipo) => {
+    console.log(`${tipo}: ${mensaje}`);
+    // Implementación real podría usar react-toastify o similar
+  };
+
+  const actualizarEstadisticas = (tipo) => {
+    console.log(`Estadística actualizada: ${tipo}`);
+    // Implementación real conectaría con backend
+  };
+
+  // Filtrar mascotas según búsqueda
+  const mascotasFiltrados = mascotas.filter(mascota =>
+    mascota.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+    mascota.raza.toLowerCase().includes(busqueda.toLowerCase())
   );
 
   // Función para atender citas
   const atenderCita = (id) => {
-    setCitas(citas.map(cita => 
-      cita.id === id ? {...cita, estado: 'atendido'} : cita
-    ));
-    setModalAbierto(false);
-    // Aquí podrías redirigir a la consulta o abrir un modal
-    // window.location.href = `/consulta/${id}`;
+    try {
+      const citaAtendida = citas.find(cita => cita.id === id);
+      
+      if (!citaAtendida) {
+        mostrarNotificacion('No se encontró la cita', 'error');
+        return;
+      }
+
+      setCitas(prevCitas => prevCitas.map(cita => 
+        cita.id === id ? {...cita, estado: 'atendido'} : cita
+      ));
+      
+      setModalAbierto(false);
+      setModalAtencionAbierto(true);
+      setCitaActual(citaAtendida);
+      actualizarEstadisticas('citasAtendidas');
+      mostrarNotificacion('Cita atendida con éxito', 'success');
+
+    } catch (error) {
+      console.error('Error al atender cita:', error);
+      mostrarNotificacion('Error al atender la cita', 'error');
+    }
   };
 
   // Función para confirmar atención
@@ -109,68 +138,103 @@ export default function InicioVet() {
     setModalAbierto(true);
   };
 
-  // Simular carga de datos desde API
+  // Carga de datos desde API
   useEffect(() => {
-    // En un caso real, aquí harías las llamadas a tu API
-    /* 
-    fetch('/api/citas/hoy')
-      .then(res => res.json())
-      .then(data => setCitas(data));
+    const cargarDatos = async () => {
+      try {
+        setCargando(true);
+        
+        // Datos simulados (reemplazar con llamadas reales a API)
+        /*
+        const [respuestaCitas, respuestaMascotas] = await Promise.all([
+          fetch('/api/citas/hoy'),
+          fetch('/api/mascotas/recientes')
+        ]);
+        
+        if (!respuestaCitas.ok || !respuestaMascotas.ok) {
+          throw new Error('Error al cargar datos');
+        }
+        
+        const datosCitas = await respuestaCitas.json();
+        const datosMascotas = await respuestaMascotas.json();
+        
+        setCitas(datosCitas);
+        setMascotas(datosMascotas);
+        */
+        
+      } catch (err) {
+        setError(err.message);
+        console.error("Error fetching data:", err);
+        mostrarNotificacion('Error al cargar datos', 'error');
+      } finally {
+        setCargando(false);
+      }
+    };
 
-    fetch('/api/pacientes/recientes')
-      .then(res => res.json())
-      .then(data => setPacientes(data));
-    */
+    cargarDatos();
   }, []);
 
   return (
     <>
-      {/* Contenido del Dashboard */}
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Bienvenido, Dr. Carlos</h1>
-          <p className="text-gray-600">Aquí tienes un resumen de tu día</p>
+      {/* Estados de carga y error */}
+      {cargando && (
+        <div className="inicioVet-loadingOverlay">
+          <div className="inicioVet-loadingMessage">Cargando...</div>
+        </div>
+      )}
+      
+      {error && (
+        <div className="inicioVet-errorAlert">
+          {error}
+        </div>
+      )}
+
+      {/* Contenido principal */}
+      <div className="inicioVet-container">
+        <div className="inicioVet-header">
+          <h1 className="inicioVet-title">Bienvenido, Dr. Carlos</h1>
+          <p className="inicioVet-subtitle">Aquí tienes un resumen de tu día</p>
         </div>
 
         {/* Tarjetas de resumen */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="card summary-card">
-            <div className="card-content">
-              <div className="flex items-center">
-                <div className="summary-icon-container blue">
-                  <Calendar className="h-6 w-6" />
+        <div className="inicioVet-summaryGrid">
+          <div className="inicioVet-summaryCard">
+            <div className="inicioVet-cardContent">
+              <div className="inicioVet-summaryCardInner">
+                <div className="inicioVet-summaryIcon inicioVet-iconBlue">
+                  <Calendar className="inicioVet-icon" />
                 </div>
                 <div>
-                  <div className="summary-label">Citas hoy</div>
-                  <div className="summary-value">{citas.length}</div>
+                  <div className="inicioVet-summaryLabel">Citas hoy</div>
+                  <div className="inicioVet-summaryValue">{citas.length}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="card summary-card">
-            <div className="card-content">
-              <div className="flex items-center">
-                <div className="summary-icon-container green">
-                  <PawPrint className="h-6 w-6" />
+          <div className="inicioVet-summaryCard">
+            <div className="inicioVet-cardContent">
+              <div className="inicioVet-summaryCardInner">
+                <div className="inicioVet-summaryIcon inicioVet-iconGreen">
+                  <PawPrint className="inicioVet-icon" />
                 </div>
                 <div>
-                  <div className="summary-label">Mascotas totales</div>
-                  <div className="summary-value">{pacientes.length}</div>
+                  <div className="inicioVet-summaryLabel">Mascotas totales</div>
+                  <div className="inicioVet-summaryValue">{mascotas.length}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="card summary-card">
-            <div className="card-content">
-              <div className="flex items-center">
-                <div className="summary-icon-container purple">
-                  <FileText className="h-6 w-6" />
+          <div className="inicioVet-summaryCard">
+            <div className="inicioVet-cardContent">
+              <div className="inicioVet-summaryCardInner">
+                <div className="inicioVet-summaryIcon inicioVet-iconPurple">
+                  <FileText className="inicioVet-icon" />
                 </div>
                 <div>
-                  <div className="summary-label">Consultas pendientes</div>
-                  <div className="summary-value">
+                  <div className="inicioVet-summaryLabel">Consultas pendientes</div>
+                  <div className="inicioVet-summaryValue">
                     {citas.filter(c => c.estado === 'pendiente').length}
                   </div>
                 </div>
@@ -179,37 +243,37 @@ export default function InicioVet() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="inicioVet-mainGrid">
           {/* Citas de hoy */}
-          <div className="lg:col-span-2">
-            <div className="card">
-              <div className="card-header">
-                <h3 className="card-title">Citas de hoy</h3>
-                <Link to="/agenda" className="link-text">
-                  Ver todas <ChevronRight className="h-4 w-4" />
+          <div className="inicioVet-appointmentsSection">
+            <div className="inicioVet-card">
+              <div className="inicioVet-cardHeader">
+                <h3 className="inicioVet-cardTitle">Citas de hoy</h3>
+                <Link to="/agenda" className="inicioVet-link">
+                  Ver todas <ChevronRight className="inicioVet-linkIcon" />
                 </Link>
               </div>
-              <div className="card-content">
-                <div className="space-y-4">
+              <div className="inicioVet-cardContent">
+                <div className="inicioVet-appointmentsList">
                   {citas.map((cita) => (
                     <div 
                       key={cita.id} 
-                      className={`appointment-card ${cita.estado === 'atendido' ? 'gray' : cita.tipoMascota === 'Perro' ? 'blue' : 'green'}`}
+                      className={`inicioVet-appointmentCard ${cita.estado === 'atendido' ? 'inicioVet-cardGray' : cita.tipoMascota === 'Perro' ? 'inicioVet-cardBlue' : 'inicioVet-cardGreen'}`}
                     >
-                      <div className="flex justify-between">
-                        <div className="flex items-start">
-                          <div className={`appointment-icon-container ${cita.estado === 'atendido' ? 'gray' : cita.tipoMascota === 'Perro' ? 'blue' : 'green'}`}>
-                            <Clock className="h-4 w-4" />
+                      <div className="inicioVet-appointmentContent">
+                        <div className="inicioVet-appointmentInfo">
+                          <div className={`inicioVet-appointmentIconContainer ${cita.estado === 'atendido' ? 'inicioVet-iconGray' : cita.tipoMascota === 'Perro' ? 'inicioVet-iconBlue' : 'inicioVet-iconGreen'}`}>
+                            <Clock className="inicioVet-iconSmall" />
                           </div>
                           <div>
-                            <div className="appointment-title">{`${cita.hora} - ${cita.mascota} (${cita.raza})`}</div>
-                            <div className="appointment-text">{cita.tipo}</div>
-                            <div className="appointment-text">Propietario: {cita.propietario}</div>
+                            <div className="inicioVet-appointmentTitle">{`${cita.hora} - ${cita.mascota} (${cita.raza})`}</div>
+                            <div className="inicioVet-appointmentText">{cita.tipo}</div>
+                            <div className="inicioVet-appointmentText">Propietario: {cita.propietario}</div>
                           </div>
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="inicioVet-appointmentActions">
                           <button 
-                            className={`btn btn-sm ${cita.estado === 'atendido' ? 'btn-disabled' : 'btn-success'}`}
+                            className={`inicioVet-button inicioVet-buttonSmall ${cita.estado === 'atendido' ? 'inicioVet-buttonDisabled' : 'inicioVet-buttonSuccess'}`}
                             onClick={() => confirmarAtencion(cita)}
                             disabled={cita.estado === 'atendido'}
                           >
@@ -224,43 +288,43 @@ export default function InicioVet() {
             </div>
           </div>
 
-          {/* Pacientes recientes */}
-          <div className="lg:col-span-1">
-            <div className="card">
-              <div className="card-header">
-                <div className="flex justify-between items-center">
-                  <h3 className="card-title">Mascotas recientes</h3>
-                  <div className="flex items-center space-x-2">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          {/* Mascotas recientes */}
+          <div className="inicioVet-patientsSection">
+            <div className="inicioVet-card">
+              <div className="inicioVet-cardHeader">
+                <div className="inicioVet-cardHeaderContent">
+                  <h3 className="inicioVet-cardTitle">Mascotas recientes</h3>
+                  <div className="inicioVet-searchContainer">
+                    <div className="inicioVet-searchWrapper">
+                      <Search className="inicioVet-searchIcon" />
                       <input
                         type="text"
                         placeholder="Buscar..."
-                        className="input input-sm pl-9"
+                        className="inicioVet-searchInput"
                         value={busqueda}
                         onChange={(e) => setBusqueda(e.target.value)}
                       />
                     </div>
-                    <Link to="/pacientes" className="link-text">
-                      Ver todos <ChevronRight className="h-4 w-4" />
+                    <Link to="/pacientes" className="inicioVet-link">
+                      Ver todos <ChevronRight className="inicioVet-linkIcon" />
                     </Link>
                   </div>
                 </div>
               </div>
-              <div className="card-content">
-                <div className="space-y-4">
-                  {pacientesFiltrados.map((paciente) => (
-                    <div key={paciente.id} className="patient-item">
-                      <div className="patient-icon-container">
-                        <PawPrint className="h-5 w-5" />
+              <div className="inicioVet-cardContent">
+                <div className="inicioVet-patientsList">
+                  {mascotasFiltrados.map((mascota) => (
+                    <div key={mascota.id} className="inicioVet-patientItem">
+                      <div className="inicioVet-patientIcon">
+                        <PawPrint className="inicioVet-iconMedium" />
                       </div>
-                      <div className="flex-1">
-                        <div className="patient-name">{paciente.nombre}</div>
-                        <div className="patient-info">
-                          {paciente.raza}, {paciente.edad} años
+                      <div className="inicioVet-patientDetails">
+                        <div className="inicioVet-patientName">{mascota.nombre}</div>
+                        <div className="inicioVet-patientInfo">
+                          {mascota.raza}, {mascota.edad} años
                         </div>
                       </div>
-                      <Link to={`/historial/${paciente.id}`} className="patient-link">
+                      <Link to={`/historial/${mascota.id}`} className="inicioVet-patientLink">
                         Historial
                       </Link>
                     </div>
@@ -274,25 +338,47 @@ export default function InicioVet() {
 
       {/* Modal de confirmación */}
       {modalAbierto && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-content">
-              <h3 className="modal-title">Confirmar atención</h3>
-              <p className="modal-text">¿Atender a {citaSeleccionada?.mascota} ({citaSeleccionada?.raza})?</p>
-              <p className="modal-text">Propietario: {citaSeleccionada?.propietario}</p>
-              <p className="modal-text">Motivo: {citaSeleccionada?.tipo}</p>
-              <div className="modal-actions">
+        <div className="inicioVet-modalOverlay">
+          <div className="inicioVet-modal">
+            <div className="inicioVet-modalContent">
+              <h3 className="inicioVet-modalTitle">Confirmar atención</h3>
+              <p className="inicioVet-modalText">¿Atender a {citaSeleccionada?.mascota} ({citaSeleccionada?.raza})?</p>
+              <p className="inicioVet-modalText">Propietario: {citaSeleccionada?.propietario}</p>
+              <p className="inicioVet-modalText">Motivo: {citaSeleccionada?.tipo}</p>
+              <div className="inicioVet-modalActions">
                 <button 
-                  className="btn btn-outline" 
+                  className="inicioVet-button inicioVet-buttonOutline" 
                   onClick={() => setModalAbierto(false)}
                 >
                   Cancelar
                 </button>
                 <button 
-                  className="btn btn-primary" 
+                  className="inicioVet-button inicioVet-buttonPrimary" 
                   onClick={() => atenderCita(citaSeleccionada.id)}
                 >
                   Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de atención en curso */}
+      {modalAtencionAbierto && citaActual && (
+        <div className="inicioVet-modalOverlay">
+          <div className="inicioVet-modal">
+            <div className="inicioVet-modalContent">
+              <h3 className="inicioVet-modalTitle">Atención en curso</h3>
+              <p className="inicioVet-modalText">Atendiendo a {citaActual.mascota}</p>
+              <p className="inicioVet-modalText">Propietario: {citaActual.propietario}</p>
+              <p className="inicioVet-modalText">Motivo: {citaActual.tipo}</p>
+              <div className="inicioVet-modalActions">
+                <button 
+                  className="inicioVet-button inicioVet-buttonPrimary" 
+                  onClick={() => setModalAtencionAbierto(false)}
+                >
+                  Finalizar atención
                 </button>
               </div>
             </div>
