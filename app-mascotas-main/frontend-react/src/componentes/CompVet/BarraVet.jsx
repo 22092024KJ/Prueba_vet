@@ -10,6 +10,7 @@ const BarraVet = ({ onToggleMenu, menuAbierto }) => {
   const menuItems = [
     { icon: Stethoscope, text: "Inicio", path: "/PanelVet/InicioVet" },
     { icon: PawPrint, text: "Mascotas", path: "/PanelVet/mascotas" },
+    { icon: FileText, text: "Historial Clínico", path: "/PanelVet/historiales" },
     {icon: Calendar, text: "Citas", path: "/PanelVet/gestion-citas" },
     { icon: FileText, text: "Historial Clínico", path: "/PanelVet/historiales" }
   ]
